@@ -43,7 +43,7 @@ type MiddlewareFunction = (
 // CORS設定の初期化
 const cors = Cors({
     methods: ['GET', 'HEAD'],
-    origin: ['http://localhost:8081', 'https://english-phrase-prictice-app.vercel.app/'], // 許可するオリジンを指定
+    origin: ['http://localhost:8081', 'https://english-phrase-prictice-app.vercel.app'], // 許可するオリジンを指定
     credentials: true, // 認証情報を含むリクエストを許可
 })
 
