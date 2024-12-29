@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Client } from '@notionhq/client'
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
-import Cors from 'cors'
+import { runCorsMiddleware } from '@/utils/cors'
 
 type NotionProperties = {
     ID: {
@@ -34,41 +34,12 @@ type FormattedResponse = {
     date: string
 }
 
-type MiddlewareFunction = (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    next: (result: Error | unknown) => void
-) => void
-
-// CORS設定の初期化
-const cors = Cors({
-    methods: ['GET', 'HEAD'],
-    origin: ['http://localhost:8081', 'https://english-phrase-prictice-app.vercel.app'], // 許可するオリジンを指定
-    credentials: true, // 認証情報を含むリクエストを許可
-})
-
-// CORSミドルウェアのPromise化
-const runMiddleware = (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    fn: MiddlewareFunction
-): Promise<unknown> => {
-    return new Promise((resolve, reject) => {
-        fn(req, res, (result: Error | unknown) => {
-            if (result instanceof Error) {
-                return reject(result)
-            }
-            return resolve(result)
-        })
-    })
-}
-
 const notion = new Client({ auth: process.env.NOTION_API_KEY })
 const databaseId = process.env.NOTION_DATABASE_ID
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    // CORSミドルウェアを実行
-    await runMiddleware(req, res, cors)
+    // CORSを許可
+    await runCorsMiddleware(req, res)
 
     try {
         // Notion からDBのデータを取得

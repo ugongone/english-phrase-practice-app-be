@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import OpenAI from 'openai';
-
+import { runCorsMiddleware } from '@/utils/cors'
 
 // https://platform.openai.com/docs/api-reference/audio/createSpeech
 const openai = new OpenAI({
@@ -8,6 +8,9 @@ const openai = new OpenAI({
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    // CORSを許可
+    await runCorsMiddleware(req, res)
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
