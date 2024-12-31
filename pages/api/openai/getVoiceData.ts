@@ -32,11 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const audioBuffer = await response.arrayBuffer();
         const audioBase64 = Buffer.from(audioBuffer).toString('base64');
 
-        // 音声データを返却する際にはcors.tsの設定に加えて、こちらの設定も必要っぽい
-        res.setHeader('Access-Control-Allow-Origin', ['http://localhost:8081', 'https://english-phrase-prictice-app.vercel.app']);
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Content-Type', 'application/json');
-
         res.status(200).json({ audio: `data:audio/mp3;base64,${audioBase64}` });
     } catch (error) {
         console.error(error);

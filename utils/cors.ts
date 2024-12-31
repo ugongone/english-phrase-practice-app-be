@@ -7,10 +7,12 @@ type MiddlewareFunction = (
     next: (result: Error | unknown) => void
 ) => void
 
+const allowedOrigin = process.env.ALLOWED_ORIGIN
+
 // CORS設定の初期化
 const cors = Cors({
     methods: ['GET', 'POST', 'HEAD'],
-    origin: ['http://localhost:8081', 'https://english-phrase-prictice-app.vercel.app'],
+    origin: allowedOrigin,
     credentials: true,
 })
 
