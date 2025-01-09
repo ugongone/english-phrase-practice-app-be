@@ -33,11 +33,14 @@ type NotionProperties = {
 };
 
 type FormattedResponse = {
-  id: string;
-  japanese: string;
-  english: string;
-  date: string;
-  status: string;
+  pageId: string;
+  properties: {
+    id: string;
+    japanese: string;
+    english: string;
+    date: string;
+    status: string;
+  };
 };
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
@@ -67,12 +70,17 @@ export default async function handler(
     ).map((result: PageObjectResponse) => {
       const properties = result.properties as unknown as NotionProperties;
       return {
-        id:
-          properties.ID.unique_id.prefix + "-" + properties.ID.unique_id.number,
-        japanese: properties.Japanese.rich_text[0]?.plain_text || "",
-        english: properties.English.title[0]?.plain_text || "",
-        date: properties.Date.date?.start || "",
-        status: properties.Status.select.name,
+        pageId: result.id,
+        properties: {
+          id:
+            properties.ID.unique_id.prefix +
+            "-" +
+            properties.ID.unique_id.number,
+          japanese: properties.Japanese.rich_text[0]?.plain_text || "",
+          english: properties.English.title[0]?.plain_text || "",
+          date: properties.Date.date?.start || "",
+          status: properties.Status.select.name,
+        },
       };
     });
 
