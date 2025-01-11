@@ -7,6 +7,14 @@ const client = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
+/**
+ * データを更新するAPI
+ * @param req リクエスト
+ * @param req.body.id 更新するデータのID
+ * @param req.body.status 更新するデータのステータス
+ * @param res レスポンス
+ * @returns 更新したデータ
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
